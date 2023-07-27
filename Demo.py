@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -5,7 +6,11 @@ import pandas_ta as ta
 from helper import get_stock_data
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from datetime import date, timedelta
 
+
+# Calculate one year ago
+one_year_ago = date.today() - timedelta(days=365)
 
 st.set_page_config(
     page_title="Demo 1", layout="wide", menu_items={"About": "tony.wei@outlook.com"}
@@ -13,11 +18,21 @@ st.set_page_config(
 
 st.title("Demo 1")
 
+col1, col2, col3 = st.columns(3)
+with col1:
+    tickers = st.text_input("Ticker", "GOOG")
+with col2:
+    start_date = st.date_input("Start Date", one_year_ago)
+with col3:
+    end_date = st.date_input("End Date", date.today())
 
-tickers = 'GOOG'  # List of ticker symbols
-start_date = '2013-01-01'  # Start date of the date range
-end_date = '2023-07-25'  # End date of the date range
+
+
+# tickers = 'GOOG'  # List of ticker symbols
+# start_date = '2013-01-01'  # Start date of the date range
+# end_date = '2023-07-25'  # End date of the date range
 stock_data = get_stock_data(tickers=tickers, start_date=start_date, end_date=end_date)
+
 
 # Calculate the EMA with a length of 10 periods
 stock_data['EMA_10'] = ta.ema(stock_data['Close'], length=10)
@@ -51,7 +66,7 @@ with st.expander("Graphs", expanded=False):
     # Update title and height
     fig.update_layout(title_text=f"{tickers} Stock Price with RSI and MACD", height=700)
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
     # Create figure and plot 'Close' prices and Volume
     fig = go.Figure()
@@ -105,7 +120,7 @@ with st.expander("Graphs", expanded=False):
     )
 
     # Show the plot
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
 # Calculate Bollinger Bands
 stock_data.ta.bbands(close='Close', length=20, std=2, append=True)
@@ -132,4 +147,5 @@ fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBL_20_2.0'], mode='l
 fig.update_layout(title=f'{tickers} Bollinger Bands', xaxis_title='Date', yaxis_title='Price', width=1500, height=1000,)
 
 # Show the figure
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
+
