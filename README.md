@@ -10,6 +10,8 @@ Command to deploy the application
 gcloud run deploy --image gcr.io/<ProjectName>/<AppName> --platform managed  --project=<ProjectName> --allow-unauthenticated
 ```
 
-gcloud builds submit --tag gcr.io/sandbox-394103/demo  --project=sandbox-394103
+gcloud builds submit --tag gcr.io/market-garden-394202/demo  --project=smarket-garden-394202
 
-gcloud run deploy --image gcr.io/sandbox-394103>/demo --platform managed  --project=sandbox-394103 --allow-unauthenticated
+gcloud run deploy --image gcr.io/market-garden-394202/demo --platform managed  --project=market-garden-394202 --allow-unauthenticated
+
+Project name: Market Garden Project ID: market-garden-394202
