@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -43,8 +42,13 @@ stock_data['RSI'] = ta.rsi(stock_data['Close'], length=14)
 # Calculate the MACD with short length=12, long length=26 and signal length=9
 stock_data['MACD'] = ta.macd(stock_data['Close'], fast=12, slow=26, signal=9)['MACD_12_26_9']
 
+# Display historical stock price and indicators
+with st.expander("Data", expanded=False):
+    st.dataframe(stock_data, use_container_width=True)
 
-with st.expander("Graphs", expanded=False):
+
+# Display graphs
+with st.expander("Graphs", expanded=True):
     # Create subplots: use 'domain' type for Pie subplot
     fig = make_subplots(rows=3, cols=1)
 
@@ -122,30 +126,30 @@ with st.expander("Graphs", expanded=False):
     # Show the plot
     st.plotly_chart(fig, use_container_width=True)
 
-# Calculate Bollinger Bands
-stock_data.ta.bbands(close='Close', length=20, std=2, append=True)
-st.dataframe(stock_data)
+    # Calculate Bollinger Bands
+    stock_data.ta.bbands(close='Close', length=20, std=2, append=True)
 
 
-# Create a Plotly figure
-fig = go.Figure()
+    # Create a Plotly figure
+    fig = go.Figure()
 
-# Add traces for close price, upper band, middle band, and lower band
-# Add Candlestick trace
-fig.add_trace(go.Candlestick(
-    x=stock_data.index, 
-    open=stock_data['Open'], 
-    high=stock_data['High'], 
-    low=stock_data['Low'], 
-    close=stock_data['Close'], 
-    name='Candlestick'))
-fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBU_20_2.0'], mode='lines', name='Upper Band', line=dict(color='rgba(255, 165, 0, 0.4)')))
-fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBM_20_2.0'], mode='lines', name='Middle Band', line=dict(color='rgba(75, 0, 130, 0.4)')))
-fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBL_20_2.0'], mode='lines', name='Lower Band', line=dict(color='rgba(0, 0, 255, 0.4)')))
+    # Add traces for close price, upper band, middle band, and lower band
+    # Add Candlestick trace
+    fig.add_trace(go.Candlestick(
+        x=stock_data.index, 
+        open=stock_data['Open'], 
+        high=stock_data['High'], 
+        low=stock_data['Low'], 
+        close=stock_data['Close'], 
+        name='Candlestick'))
+    fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBU_20_2.0'], mode='lines', name='Upper Band', line=dict(color='rgba(255, 165, 0, 0.4)')))
+    fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBM_20_2.0'], mode='lines', name='Middle Band', line=dict(color='rgba(75, 0, 130, 0.4)')))
+    fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['BBL_20_2.0'], mode='lines', name='Lower Band', line=dict(color='rgba(0, 0, 255, 0.4)')))
 
-# Set figure layout
-fig.update_layout(title=f'{tickers} Bollinger Bands', xaxis_title='Date', yaxis_title='Price', width=1500, height=1000,)
+    # Set figure layout
+    fig.update_layout(title=f'{tickers} Bollinger Bands', xaxis_title='Date', yaxis_title='Price', width=1500, height=1000,)
 
-# Show the figure
-st.plotly_chart(fig, use_container_width=True)
+    # Show the figure
+    st.plotly_chart(fig, use_container_width=True)
+
 
